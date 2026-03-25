@@ -18,8 +18,8 @@ import os
 # 3. If step 2 is true, pick a random letter from letter templates and replace the [NAME] with the person's actual name from birthdays.csv
 # email = "josephbernal1999@gmail.com"
 # pw = "sltq sjmb ouxs conh"
-MY_EMAIL = os.environ.get("email")
-MY_PASSWORD = os.environ.get("pw")
+MY_EMAIL = os.environ.get("MY_EMAIL")
+MY_PASSWORD = os.environ.get("MY_PASSWORD")
 
 bday_dates = pandas.read_csv("birthdays.csv")
 bday_dates_dict = bday_dates.to_dict(orient="records")
