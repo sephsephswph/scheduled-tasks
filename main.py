@@ -6,33 +6,42 @@
 # See the solution video in the 100 Days of Python Course for explainations.
 
 
-from datetime import datetime
+##################### Extra Hard Starting Project ######################
+import datetime as dt
 import pandas
 import random
 import smtplib
-import os
 
-# import os and use it to get the Github repository secrets
-MY_EMAIL = os.environ.get("MY_EMAIL")
-MY_PASSWORD = os.environ.get("MY_PASSWORD")
+# 1. Update the birthdays.csv
+# 2. Check if today matches a birthday in the birthdays.csv
+# 3. If step 2 is true, pick a random letter from letter templates and replace the [NAME] with the person's actual name from birthdays.csv
+email = "josephbernal1999@gmail.com"
+pw = "sltq sjmb ouxs conh"
 
-today = datetime.now()
-today_tuple = (today.month, today.day)
+bday_dates = pandas.read_csv("birthdays.csv")
+bday_dates_dict = bday_dates.to_dict(orient="records")
 
-data = pandas.read_csv("birthdays.csv")
-birthdays_dict = {(data_row["month"], data_row["day"])                  : data_row for (index, data_row) in data.iterrows()}
-if today_tuple in birthdays_dict:
-    birthday_person = birthdays_dict[today_tuple]
-    file_path = f"letter_templates/letter_{random.randint(1, 3)}.txt"
-    with open(file_path) as letter_file:
-        contents = letter_file.read()
-        contents = contents.replace("[NAME]", birthday_person["name"])
+date_today = dt.datetime.now()
+month = date_today.month
+day = date_today.day
 
-    with smtplib.SMTP("YOUR EMAIL PROVIDER SMTP SERVER ADDRESS") as connection:
-        connection.starttls()
-        connection.login(MY_EMAIL, MY_PASSWORD)
-        connection.sendmail(
-            from_addr=MY_EMAIL,
-            to_addrs=birthday_person["email"],
-            msg=f"Subject:Happy Birthday!\n\n{contents}"
-        )
+for bday_celebrant in bday_dates_dict:
+    print(bday_celebrant)
+    if bday_celebrant["month"] == month and bday_celebrant["day"] == day:
+        letter_number = random.randint(1,3)
+        print(letter_number)
+        with open(f"letter_templates/letter_{letter_number}.txt", mode = "r") as letter:
+            file = letter.read()
+            msg_to_be_sent = file.replace("[NAME]", f"{bday_celebrant["name"]}")
+# 4. Send the letter generated in step 3 to that person's email address.
+        with smtplib.SMTP('smtp.gmail.com', port=587) as connection:
+            print("Starting TLS...")
+            connection.starttls()
+            print("Logging in...")
+            connection.login(user=email, password=pw)
+            print("Sending email...")
+            connection.sendmail(from_addr=email,
+                                to_addrs=email,
+                                msg=f"Subject: Happy Birthday!\n\n"
+                                    f"{msg_to_be_sent}")
+            print("Email sent.")
