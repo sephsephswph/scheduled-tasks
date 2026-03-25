@@ -40,10 +40,10 @@ for bday_celebrant in bday_dates_dict:
             print("Starting TLS...")
             connection.starttls()
             print("Logging in...")
-            connection.login(user=email, password=pw)
+            connection.login(user=MY_EMAIL, password=MY_PASSWORD)
             print("Sending email...")
-            connection.sendmail(from_addr=email,
-                                to_addrs=email,
+            connection.sendmail(from_addr=MY_EMAIL,
+                                to_addrs=bday_celebrant["email"],
                                 msg=f"Subject: Happy Birthday!\n\n"
                                     f"{msg_to_be_sent}")
             print("Email sent.")
